@@ -1,21 +1,11 @@
-#include "math.h"
-
-#include "mpi.h"
-
+#include <math.h>
+#include <mpi.h>
 #include <stdbool.h>
-
 #include <stdio.h>
-
 #include <stdlib.h>
+#define SIZE 10
 
-#define SIZE 800000
-using namespace std;
-/*
-Divides the array given into two partitions
-- Lower than pivot
-- Higher than pivot
-and returns the Pivot index in the array
-*/
+
 int partition(int * arr, int low, int high) {
   int pivot = arr[high];
   int i = (low - 1);
@@ -125,13 +115,13 @@ int main(int argc, char * argv[]) {
   MPI_Comm_size(MPI_COMM_WORLD, & size);
   if (rank == 0) {
     // --- RANDOM ARRAY GENERATION ---
-    printf("Creating Random List of %d elements\n", SIZE);
+    printf("Creating Random List of %d elements", SIZE);
     int j = 0;
     for (j = 0; j < SIZE; ++j) {
       unsorted_array[j] = (int) rand() % 1000;
       unsorted_array_copy[j] = unsorted_array[j];
     }
-    printf("Created\n");
+    printf("Created");
   }
   // Calculate in which layer of the tree each Cluster belongs
   int rankPower = 0;
@@ -167,9 +157,9 @@ int main(int argc, char * argv[]) {
   if (rank == 0) {
     finish_timer = MPI_Wtime();
     time_par = finish_timer - start_timer;
-    printf("Total time for %d Clusters : %2.2f sec \n", size, time_par);
+    printf("Total time for %d Clusters : %2.2f sec", size, time_par);
     // --- VALIDATION CHECK ---
-    printf("Checking if array is sorted correctly.. \n");
+    printf("Checking if array is sorted correctly..");
     bool error = false;
     int i = 0;
     for (i = 0; i < SIZE - 1; i++) {
@@ -179,9 +169,9 @@ int main(int argc, char * argv[]) {
       }
     }
     if (error)
-      printf("Error..Not sorted correctly\n");
+      printf("Error..Not sorted correctly");
     else
-      printf("Sorted correctly!\n");
+      printf("Sorted correctly!");
   }
   MPI_Finalize();
   // End of Parallel Execution
@@ -192,9 +182,7 @@ int main(int argc, char * argv[]) {
     finish_timer = MPI_Wtime();
     double time_seq = finish_timer - start_timer;
     float speedup = time_seq / time_par;
-    printf("Total time for sequential execution: %2.2f sec\nSpeedup: %
-      2.2 f\ n ",
-      time_seq, speedup);
+    printf("Total time for sequential execution: %f sec Speedup: %f ",time_seq, speedup);
   }
   return 0;
 }
